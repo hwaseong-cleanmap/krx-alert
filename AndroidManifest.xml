@@ -1,0 +1,6 @@
+plugins { id 'com.android.application' }
+android { namespace 'krx.alert'; compileSdk 35
+ defaultConfig { applicationId 'krx.alert'; minSdk 26; targetSdk 35; versionCode 2; versionName '0.2-scanner' }
+ compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+}
+dependencies { implementation 'com.squareup.okhttp3:okhttp:4.12.0'; testImplementation 'junit:junit:4.13.2' }
