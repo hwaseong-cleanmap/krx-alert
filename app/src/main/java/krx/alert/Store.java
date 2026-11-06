@@ -17,7 +17,9 @@ public final class Store {
   return (javax.crypto.SecretKey)k.getKey("kis-local",null);
  }
  public void credentials(String app,String secret)throws Exception {
-  JSONObject obj=new JSONObject().put("app",app).put("secret",secret);
+  saveCredentials(new JSONObject().put("app",app).put("secret",secret));
+ }
+ public void saveCredentials(JSONObject obj)throws Exception {
   Cipher c=Cipher.getInstance("AES/GCM/NoPadding");c.init(Cipher.ENCRYPT_MODE,key());
   prefs.edit().putString("iv",Base64.encodeToString(c.getIV(),Base64.NO_WRAP)).putString("credentials",Base64.encodeToString(c.doFinal(obj.toString().getBytes("UTF-8")),Base64.NO_WRAP)).commit();
  }

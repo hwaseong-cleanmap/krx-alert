@@ -95,6 +95,11 @@ public final class WatchService extends Service {
   JSONArray a=store.items();for(int n=0;n<a.length();n++){
    JSONObject item=a.getJSONObject(n);if(!f[0].equals(item.optString("code")))continue;
    boolean owned=item.optBoolean("owned");String signal=Rules.trigger(owned,price,item.optDouble("buy",0),item.optDouble("stop",0),item.optDouble("take",0));
+   if(!owned&&ScannerModel.VERSION.equals(item.optString("strategy"))&&MarketData.cutoff().equals(store.prefs.getString("scanCutoff",""))&&item.optString("signalDate").equals(store.prefs.getString("scanAsOf",""))&&f[33].compareTo(item.optString("signalDate"))>0)signal="B4 매수 검토 후보 · 첫 시세 수신";
+   if(owned&&signal.isEmpty()&&ScannerModel.VERSION.equals(item.optString("strategy"))){
+    org.json.JSONArray days=new org.json.JSONArray(store.prefs.getString("calendar","[]"));java.util.List<String> dates=new java.util.ArrayList<>();for(int d=0;d<days.length();d++)dates.add(days.getString(d));
+    if(Rules.holdingDue(item.optString("boughtAt"),dates,f[33],f[1]))signal="5거래일 보유 경과 · 청산 검토";
+   }
    if(signal.isEmpty())continue;
    String side=owned?"sell":"buy";
    String event=f[33]+":"+side+":"+signal+":"+item.optString("revision");String key="event_"+f[0];

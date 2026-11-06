@@ -15,6 +15,13 @@ public final class Rules {
     && ("2".equals(market)||"5".equals(market));
   } catch(Exception e){return false;}
  }
+ public static boolean holdingDue(String boughtAt,List<String> calendar,String tickDate,String time){
+  try{String entry=java.time.LocalDate.parse(boughtAt.substring(0,10)).format(DateTimeFormatter.BASIC_ISO_DATE);
+   if(calendar.isEmpty()||entry.compareTo(calendar.get(0))<0)return false;
+   Set<String> dates=new TreeSet<>(calendar);dates.add(tickDate);int count=0;for(String date:dates)if(date.compareTo(entry)>=0&&date.compareTo(tickDate)<=0)count++;
+   return count>5||count==5&&time.compareTo("153000")>=0;
+  }catch(Exception e){return false;}
+ }
  public static String trigger(boolean owned,double price,double buy,double stop,double take) {
   if(!Double.isFinite(price)||price<=0)return "";
   if(owned){if(stop>0&&price<=stop)return "손절 조건";if(take>0&&price>=take)return "목표가 조건";}
